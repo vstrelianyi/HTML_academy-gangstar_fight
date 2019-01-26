@@ -1,16 +1,41 @@
-"use strict";
 (function() {
+    "use strict";
+    var OFFICER = "\u{1F46E}";
+    var PISTOL = "\u{1F52B}";
+
+    var Gangster = function(nickname) {
+        this.nickname = nickname;
+        this.weapon = PISTOL;
+        this.check = function() {
+            return this.weapon;
+        };
+    };
+
+    // var isPoliceman = function(gangster) {
+    //     return gangster.check() === OFFICER;
+    // };
+
+    var isPoliceman = function(gangster) {
+        return !(gangster instanceof Gangster);
+    };
+
     var startFirefight = function(gang) {
-        console.log(gang);
+        // console.log(gang);
         do {
             var random = Math.floor(Math.random() * gang.length);
             var gangster = gang.splice(random, 1)[0];
-            console.log("Убит: " + gangster.nickname);
+
+            if (isPoliceman(gangster)) {
+                console.log(gangster.nickname + " turned out to be a cop!");
+                return;
+            }
+            console.log(
+                "Checking: " + gangster.nickname + " " + gangster.check()
+            );
         } while (gang.length > 1);
-        console.log("Выжил: " + gang[0].nickname);
+        console.log("Cop was not discovered, gangsters lost!");
     };
 
-    var PISTOL = "\u{1F52B}";
     var createGangster = function(nickname, weapon) {
         return {
             nickname: nickname,
@@ -21,11 +46,20 @@
         };
     };
 
-    var mrBlonde = createGangster("Мистер Блондин");
-    var mrPink = createGangster("Мистер Розовый");
-    var mrOrange = createGangster("Мистер Оранжевый");
-    var mrWhite = createGangster("Мистер Белый");
-    var mrBlue = createGangster("Мистер Синий");
+    var mrBlonde = new Gangster("Mister Blond");
+    var mrPink = new Gangster("Mister Pink");
+    var mrOrange = new Gangster("Mister Orange");
+    var mrWhite = new Gangster("Mister White");
+    var mrBlue = new Gangster("Mister Blue");
 
-    startFirefight([mrBlonde, mrPink, mrOrange, mrWhite, mrBlue]);
+    var mrRed = {
+        nickname: "Mister Red",
+        weapon: OFFICER,
+        check: function() {
+            // throw new Error("Everybody stand still! Nobody move!");
+            return PISTOL;
+        }
+    };
+
+    startFirefight([mrBlonde, mrPink, mrOrange, mrWhite, mrBlue, mrRed]);
 })();
